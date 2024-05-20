@@ -85,11 +85,11 @@ adtype = Optimization.AutoZygote()
 optf = Optimization.OptimizationFunction((x, p) -> loss(x), adtype)
 optprob = Optimization.OptimizationProblem(optf, ComponentVector{Float64}(p))
 
-res1 = Optimization.solve(optprob, ADAM(), callback = callback, maxiters = 5000)
+res1 = Optimization.solve(optprob, ADAM(), callback = callback, maxiters = 10000)
 println("Training loss after $(length(losses)) iterations: $(losses[end])")
 
 optprob2 = Optimization.OptimizationProblem(optf, res1.u)
-res2 = Optimization.solve(optprob2, Optim.LBFGS(), callback = callback, maxiters = 10000)
+res2 = Optimization.solve(optprob2, Optim.BFGS(initial_stepnorm=0.01), callback = callback, maxiters = 10000)
 println("Final training loss after $(length(losses)) iterations: $(losses[end])")
 
 # Rename the best candidate
